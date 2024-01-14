@@ -20,14 +20,17 @@
 			<AppenderRef ref="Console_Appender" />
 		</Logger>
 
-		<Logger name="com.filmsus.myapp" level="INFO" additivity="false">
+		<Logger name="org.springframework.transaction" level="DEBUG" additivity="false">
 			<AppenderRef ref="Console_Appender" />
 		</Logger>
 
-		<logger name="log4jdbc.log4j2" level="ERROR" additivity="false">
-			<MarkerFilter marker="LOG4JDBC_OTHER" onMatch="DENY" onMismatch="NEUTRAL"/>
-			<appender-ref ref="Console_Appender"/>
-		</logger>
+		<Logger name="org.hibernate" level="DEBUG" additivity="false">
+			<AppenderRef ref="Console_Appender" />
+		</Logger>
+
+		<Logger name="com.example.myapp" level="INFO" additivity="false">
+			<AppenderRef ref="Console_Appender" />
+		</Logger>
 	</Loggers>
 
 </Configuration>

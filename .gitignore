@@ -5,3 +5,7 @@ target
 .project
 .springBeans
 .DS_Store
+application.properties
+.gradle
+build
+out
