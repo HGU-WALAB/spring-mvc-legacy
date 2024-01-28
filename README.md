@@ -61,60 +61,49 @@
 
 `JSP`와 `Thymeleaf` 에 대한 의존성이 추가되어 있습니다.
 
-### JSP
-
-- 기본으로 `JSP`가 설정되어 있어 별도의 설정이 필요 없습니다.
-- `src/main/webapp/WEB-INF/views` 경로에 `*.jsp` 확장자 파일을 생성하여 작업하면 됩니다.
-
 ### Thymeleaf
 
-1. `src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml` 파일에서 다음 빈을 삭제합니다.
+- 기본으로 `Thymeleaf`가 설정되어 있어 별도의 설정이 필요 없습니다.
+- `src/main/resources/templates/` 경로에 `html` 확장자 파일을 생성하여 작업하면 됩니다.
+
+### JSP
+
+1. `src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml` 파일에서 다음 빈 설정정보를 삭제합니다.
 
 ```xml
-<!-- JSP -->
-<!-- Remove this section to use ThymeLeaf instead of JSP -->
+
+<beans:beans>
+    <beans:bean id="templateResolver" class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
+        <beans:property name="prefix" value="classpath:/templates/"/>
+        <beans:property name="suffix" value=".html"/>
+        <beans:property name="characterEncoding" value="UTF-8"/>
+    </beans:bean>
+    <beans:bean id="templateEngine" class="org.thymeleaf.spring5.SpringTemplateEngine">
+        <beans:property name="templateResolver" ref="templateResolver"/>
+    </beans:bean>
+    <beans:bean class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
+        <beans:property name="templateEngine" ref="templateEngine"/>
+        <beans:property name="characterEncoding" value="UTF-8"/>
+    </beans:bean>
+</beans:beans>
+```
+
+2. `src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml` 파일에서 다음 빈 설정정보를 주석 해제합니다.
+
+```xml
+
 <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     <beans:property name="prefix" value="/WEB-INF/views/"/>
     <beans:property name="suffix" value=".jsp"/>
 </beans:bean>
 ```
 
-2. `src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml` 파일에서 다음 세 개의 빈을 주석 해제합니다.
-
-- `templateResolver`
-- `templateEngine`
-- `thymeleafViewResolver`
-
-```xml
-
-<beans:beans>
-    <!--    ThymeLeaf-->
-    <!--    Uncomment this section to use ThymeLeaf instead of JSP-->
-    <!-- 1 -->
-    <beans:bean id="templateResolver" class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
-        <beans:property name="prefix" value="classpath:/templates/"/>
-        <beans:property name="suffix" value=".html"/>
-        <beans:property name="templateMode" value="HTML"/>
-    </beans:bean>
-    <!-- 2 -->
-    <beans:bean id="templateEngine" class="org.thymeleaf.spring5.SpringTemplateEngine">
-        <beans:property name="templateResolver" ref="templateResolver"/>
-    </beans:bean>
-    <!-- 3 -->
-    <beans:bean class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
-        <beans:property name="templateEngine" ref="templateEngine"/>
-    </beans:bean>
-</beans:beans>
-```
-
-3. `src/main/resources/templates` 경로에 `*.html` 확장자 파일을 생성하여 작업하면 됩니다.
-
 ## 환경 변수
 
 `src/main/resources/` 위치에 `application.properties` 파일을 생성하여 환경 변수를 설정할 수 있습니다.
 데이터베이스 설정정보 등 중요한 정보는 이 파일에 작성해주세요. 깃허브에 올라가지 않도록 주의해야 합니다.
 
-`root-context.xml` 파일의 데이터베이스 설정정보는 다음과 같습니다.
+`root-context.xml` 파일의 데이터베이스 설정정보는 다음과 같이 작성합니다.
 
 ```properties
 # application.properties
@@ -126,20 +115,12 @@ spring.datasource.password=
 
 ## 라이브러리 추가
 
-`JPA`, `MyBatis`와 같은 라이브러리는 [mvnrepository.com](mvnrepository.com)에서 찾아 `build.gradle` 파일에 추가해주세요.
-이때, 버전
-호환성은 [spring-boot-2.7.18-dependency-versions](https://docs.spring.io/spring-boot/docs/2.7.18/reference/html/dependency-versions.html#appendix.dependency-versions)
-을 참고해주세요.
-
-JPA, MyBatis 적용을 위한 예상 의존성은 다음과 같습니다.
-
-### JPA
-
-- `spring-orm`
-- `spring-data-jpa`
-- `hibernate-core`
+`MyBatis`와 같은 라이브러리는 [mvnrepository.com](https://mvnrepository.com/)에서 찾아 `build.gradle` 파일에 추가해주세요.
+이때, 버전 호환성은 [spring-boot-2.7.18-dependency-versions](https://docs.spring.io/spring-boot/docs/2.7.18/reference/html/dependency-versions.html#appendix.dependency-versions)을 참고해주세요.
 
 ### MyBatis
+
+MyBatis 적용을 위한 예상 의존성은 다음과 같습니다.
 
 - `mybatis`
 - `mybatis-spring`
